@@ -4,4 +4,7 @@
 import type * as governanceStandard from "./governance_standard";
 export type { governanceStandard };
 export type { Box } from "./Box";
+export type { ERC1155Mock } from "./ERC1155Mock";
 export type { GovernanceToken } from "./GovernanceToken";
+export type { Holder } from "./Holder";
+export type { Token } from "./Token";

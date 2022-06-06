@@ -3,7 +3,7 @@ import { DeployFunction } from "hardhat-deploy/types";
 //@ts-ignore
 import { ethers } from "hardhat";
 
-const deployBox: DeployFunction = async function (
+const deployToken: DeployFunction = async function (
   hre: HardhatRuntimeEnvironment
 ) {
   // @ts-ignore
@@ -11,21 +11,23 @@ const deployBox: DeployFunction = async function (
   const { deploy, log, get } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  log("Deploying Box...");
+  log("Deploying Token...");
 
-  const box = await deploy("Box", {
+  const token = await deploy("Token", {
     from: deployer,
-    args: [],
+    args: ["TestToken", "TST", deployer, 0],
     log: true,
   });
 
   const timeLock = await ethers.getContract("TimeLock");
-  const boxContract = await ethers.getContractAt("Box", box.address);
+  const tokenContract = await ethers.getContractAt("Token", token.address);
 
-  const transferOwnerTx = await boxContract.transferOwnership(timeLock.address);
+  const transferOwnerTx = await tokenContract.transferOwnership(
+    timeLock.address
+  );
 
   await transferOwnerTx.wait(1);
-  log(`BoxContract at ${boxContract.address}`);
+  log(`Token Contract at ${tokenContract.address}`);
 };
 
-export default deployBox;
+export default deployToken;

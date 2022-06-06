@@ -1,12 +1,7 @@
 import {
-  MINT_ACCOUNT,
-  MINT_TOKEN_ID,
-  MINT_TOKEN_VALUE,
-  MINT_FUNC,
-  TRANSFER_FROM_HOLDER_FUNC,
-  MINT_PROPOSAL_DESCRIPTION,
-  MINT_ERC1155_PROPOSAL_DESCRIPTION,
-  TRANSFER_ERC1155_PROPOSAL_DESCRIPTION,
+  NEW_STORE_VALUE,
+  FUNC,
+  PROPOSAL_DESCRIPTION,
   developmentChains,
   VOTING_DELAY,
   proposalsFile,
@@ -24,27 +19,19 @@ export async function propose(
 ) {
   const governor = await ethers.getContract("GovernorContract");
 
-  const token = await ethers.getContract("ERC1155Mock");
+  const box = await ethers.getContract("Box");
 
-  const holder = await ethers.getContract("Holder");
-
-  const encodedFunctionCall = token.interface.encodeFunctionData(
+  const encodedFunctionCall = box.interface.encodeFunctionData(
     functionToCall,
     args
   );
 
-  console.log(`Proposing ${functionToCall} on ${token.address} with ${args}`);
+  console.log(`Proposing ${functionToCall} on ${box.address} with ${args}`);
 
-  // console.log(
-  //   `Proposal Description: \n ${proposalDescription} ${MINT_ACCOUNT}`
-  // );
-
-  console.log(
-    `Proposal Description: \n ${proposalDescription} ${holder.address}`
-  );
+  console.log(`Proposal Description: \n ${proposalDescription}`);
 
   const proposeTx = await governor.propose(
-    [token.address],
+    [box.address],
     [0],
     [encodedFunctionCall],
     proposalDescription
@@ -65,13 +52,7 @@ export async function propose(
   fs.writeFileSync(proposalsFile, JSON.stringify(proposals));
 }
 
-//propose([MINT_ACCOUNT, MINT_TOKEN_VALUE], MINT_FUNC, MINT_PROPOSAL_DESCRIPTION)
-
-propose(
-  [holder.address, MINT_TOKEN_ID, MINT_TOKEN_VALUE],
-  MINT_FUNC,
-  MINT_ERC1155_PROPOSAL_DESCRIPTION
-)
+propose([NEW_STORE_VALUE], FUNC, PROPOSAL_DESCRIPTION)
   .then(() => process.exit(0))
   .catch((error) => {
     console.log(error);

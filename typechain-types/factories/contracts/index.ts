@@ -3,4 +3,7 @@
 /* eslint-disable */
 export * as governanceStandard from "./governance_standard";
 export { Box__factory } from "./Box__factory";
+export { ERC1155Mock__factory } from "./ERC1155Mock__factory";
 export { GovernanceToken__factory } from "./GovernanceToken__factory";
+export { Holder__factory } from "./Holder__factory";
+export { Token__factory } from "./Token__factory";

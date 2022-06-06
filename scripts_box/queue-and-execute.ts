@@ -1,32 +1,28 @@
 import {
   developmentChains,
-  MINT_ACCOUNT,
-  MINT_TOKEN_VALUE,
-  MINT_FUNC,
-  MINT_PROPOSAL_DESCRIPTION,
+  FUNC,
   MIN_DELAY,
+  NEW_STORE_VALUE,
+  PROPOSAL_DESCRIPTION,
 } from "../helper-hardhat-config";
 // @ts-ignore
 import { ethers, network } from "hardhat";
 import { moveTime } from "../utils/move-time";
 import { moveBlocks } from "../utils/move-blocks";
 export async function queueAndExecute() {
-  const args = [MINT_ACCOUNT, MINT_TOKEN_VALUE];
-  const token = await ethers.getContract("Token");
-  const encodedFunctionCall = token.interface.encodeFunctionData(
-    MINT_FUNC,
-    args
-  );
+  const args = [NEW_STORE_VALUE];
+  const box = await ethers.getContract("Box");
+  const encodedFunctionCall = box.interface.encodeFunctionData(FUNC, args);
 
   const descriptionHash = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes(MINT_PROPOSAL_DESCRIPTION)
+    ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION)
   );
 
   const governor = await ethers.getContract("GovernorContract");
   console.log("Queuing....");
 
   const queueTx = await governor.queue(
-    [token.address],
+    [box.address],
     [0],
     [encodedFunctionCall],
     descriptionHash
@@ -42,7 +38,7 @@ export async function queueAndExecute() {
   console.log("Executing...");
 
   const executeTx = await governor.execute(
-    [token.address],
+    [box.address],
     [0],
     [encodedFunctionCall],
     descriptionHash
@@ -50,8 +46,8 @@ export async function queueAndExecute() {
 
   await executeTx.wait(1);
 
-  const accountBalance = await token.balanceOf(MINT_ACCOUNT);
-  console.log(`Account Balance: ${accountBalance.toString()}`);
+  const boxNewValue = await box.retrieve();
+  console.log(`New Box Value: ${boxNewValue.toString()}`);
 }
 
 queueAndExecute()
