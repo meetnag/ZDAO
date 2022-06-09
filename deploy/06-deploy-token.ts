@@ -22,11 +22,11 @@ const deployToken: DeployFunction = async function (
   const timeLock = await ethers.getContract("TimeLock");
   const tokenContract = await ethers.getContractAt("Token", token.address);
 
-  const transferOwnerTx = await tokenContract.transferOwnership(
-    timeLock.address
-  );
+  // const transferOwnerTx = await tokenContract.transferOwnership(
+  //   timeLock.address
+  // );
 
-  await transferOwnerTx.wait(1);
+  // await transferOwnerTx.wait(1);
   log(`Token Contract at ${tokenContract.address}`);
 };
 

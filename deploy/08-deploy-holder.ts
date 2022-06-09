@@ -24,11 +24,11 @@ const deployHolder: DeployFunction = async function (
   const timeLock = await ethers.getContract("TimeLock");
   const holderContract = await ethers.getContractAt("Holder", holder.address);
 
-  const transferOwnerTx = await holderContract.transferOwnership(
-    timeLock.address
-  );
+  // const transferOwnerTx = await holderContract.transferOwnership(
+  //   timeLock.address
+  // );
 
-  await transferOwnerTx.wait(1);
+  // await transferOwnerTx.wait(1);
   log(`HolderContract at ${holderContract.address}`);
 };
 

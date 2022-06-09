@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 // mock class using ERC20
-contract Token is ERC20, Ownable {
+contract Token is ERC20 {
     constructor(
         string memory name,
         string memory symbol,

@@ -2,11 +2,8 @@ import {
   MINT_ACCOUNT,
   MINT_TOKEN_ID,
   MINT_TOKEN_VALUE,
-  MINT_FUNC,
-  TRANSFER_FROM_HOLDER_FUNC,
-  MINT_PROPOSAL_DESCRIPTION,
-  MINT_ERC1155_PROPOSAL_DESCRIPTION,
-  TRANSFER_ERC1155_PROPOSAL_DESCRIPTION,
+  TRANSFER_HOLDER_FUNC,
+  TRANSFER_ERC1155_AND_MINT_ERC20_PROPOSAL_DESCRIPTION,
   developmentChains,
   VOTING_DELAY,
   proposalsFile,
@@ -28,6 +25,14 @@ export async function propose(
 
   const holder = await ethers.getContract("Holder");
 
+  args = [
+    MINT_ACCOUNT,
+    holder.address,
+    MINT_TOKEN_ID,
+    MINT_TOKEN_VALUE,
+    Buffer.from(""),
+  ];
+
   const encodedFunctionCall = token.interface.encodeFunctionData(
     functionToCall,
     args
@@ -35,12 +40,8 @@ export async function propose(
 
   console.log(`Proposing ${functionToCall} on ${token.address} with ${args}`);
 
-  // console.log(
-  //   `Proposal Description: \n ${proposalDescription} ${MINT_ACCOUNT}`
-  // );
-
   console.log(
-    `Proposal Description: \n ${proposalDescription} ${holder.address}`
+    `Proposal Description: \n ${proposalDescription} ${token.address}`
   );
 
   const proposeTx = await governor.propose(
@@ -65,12 +66,10 @@ export async function propose(
   fs.writeFileSync(proposalsFile, JSON.stringify(proposals));
 }
 
-//propose([MINT_ACCOUNT, MINT_TOKEN_VALUE], MINT_FUNC, MINT_PROPOSAL_DESCRIPTION)
-
 propose(
-  [holder.address, MINT_TOKEN_ID, MINT_TOKEN_VALUE],
-  MINT_FUNC,
-  MINT_ERC1155_PROPOSAL_DESCRIPTION
+  [],
+  TRANSFER_HOLDER_FUNC,
+  TRANSFER_ERC1155_AND_MINT_ERC20_PROPOSAL_DESCRIPTION
 )
   .then(() => process.exit(0))
   .catch((error) => {

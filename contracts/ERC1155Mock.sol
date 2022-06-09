@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @title ERC1155Mock
  * This mock just publicizes internal functions for testing purposes
  */
-contract ERC1155Mock is ERC1155, Ownable {
+contract ERC1155Mock is ERC1155  {
     constructor(string memory uri) ERC1155(uri) {}
 
     function setURI(string memory newuri) public {
