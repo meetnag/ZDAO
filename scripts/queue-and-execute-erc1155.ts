@@ -12,8 +12,13 @@ import { ethers, network } from "hardhat";
 import { moveTime } from "../utils/move-time";
 import { moveBlocks } from "../utils/move-blocks";
 export async function queueAndExecute() {
-  //const holder = await ethers.getContract("Holder");
-  const args = [MINT_ACCOUNT, MINT_TOKEN_ID, MINT_TOKEN_VALUE, Buffer.from("")];
+  const holder = await ethers.getContract("Holder");
+  const args = [
+    holder.address,
+    MINT_TOKEN_ID,
+    MINT_TOKEN_VALUE,
+    Buffer.from(""),
+  ];
   const token = await ethers.getContract("ERC1155Mock");
   const encodedFunctionCall = token.interface.encodeFunctionData(
     MINT_FUNC,
@@ -52,8 +57,14 @@ export async function queueAndExecute() {
 
   await executeTx.wait(1);
 
-  const accountBalance = await token.balanceOf(MINT_ACCOUNT, MINT_TOKEN_ID);
+  const coin = await ethers.getContract("Token");
+
+  const accountBalance = await token.balanceOf(holder.address, MINT_TOKEN_ID);
   console.log(`Account Balance: ${accountBalance.toString()}`);
+
+  const coinBalance = await coin.balanceOf(MINT_ACCOUNT);
+  console.log(`Coin Minted to : ${await coin.getMintedAccount()}`);
+  console.log(`Coin Balance: ${coinBalance.toString()}`);
 }
 
 queueAndExecute()

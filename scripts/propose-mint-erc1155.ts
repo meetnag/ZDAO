@@ -23,9 +23,9 @@ export async function propose(
 
   const token = await ethers.getContract("ERC1155Mock");
 
-  //const holder = await ethers.getContract("Holder");
+  const holder = await ethers.getContract("Holder");
 
-  args = [MINT_ACCOUNT, MINT_TOKEN_ID, MINT_TOKEN_VALUE, Buffer.from("")];
+  args = [holder.address, MINT_TOKEN_ID, MINT_TOKEN_VALUE, Buffer.from("")];
 
   const encodedFunctionCall = token.interface.encodeFunctionData(
     functionToCall,
@@ -33,7 +33,7 @@ export async function propose(
   );
 
   console.log(
-    `Proposal Description: \n ${proposalDescription} ${MINT_ACCOUNT}`
+    `Proposal Description: \n ${proposalDescription} ${holder.address}`
   );
 
   const proposeTx = await governor.propose(

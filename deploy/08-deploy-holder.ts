@@ -14,10 +14,11 @@ const deployHolder: DeployFunction = async function (
   log("Deploying holder...");
 
   const mock = await ethers.getContract("ERC1155Mock");
+  const token = await ethers.getContract("Token");
 
   const holder = await deploy("Holder", {
     from: deployer,
-    args: [mock.address],
+    args: [mock.address, token.address],
     log: true,
   });
 
