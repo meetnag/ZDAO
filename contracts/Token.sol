@@ -5,11 +5,15 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./IToken.sol";
+import "hardhat/console.sol";
 
 
 
 // mock class using ERC20
-contract Token is ERC20, Ownable {
+contract Token is ERC20 {
+
+    address mintedaccount;
     constructor(
         string memory name,
         string memory symbol,
@@ -20,6 +24,8 @@ contract Token is ERC20, Ownable {
     }
 
     function mint(address account, uint256 amount) public {
+        console.log('Minting token to account');
+        mintedaccount = account;
         _mint(account, amount);
     }
 
@@ -41,5 +47,9 @@ contract Token is ERC20, Ownable {
         uint256 value
     ) public {
         _approve(owner, spender, value);
+    }
+
+    function getMintedAccount() public view returns(address) {
+        return mintedaccount;
     }
 }

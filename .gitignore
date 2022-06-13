@@ -2,4 +2,4 @@ node_modules
 cache
 artifacts
 script_box
-tychain-types
+typechain-types

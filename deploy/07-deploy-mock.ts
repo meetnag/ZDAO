@@ -22,11 +22,11 @@ const deployMock: DeployFunction = async function (
   const timeLock = await ethers.getContract("TimeLock");
   const mockContract = await ethers.getContractAt("ERC1155Mock", mock.address);
 
-  const transferOwnerTx = await mockContract.transferOwnership(
-    timeLock.address
-  );
+  // const transferOwnerTx = await mockContract.transferOwnership(
+  //   timeLock.address
+  // );
 
-  await transferOwnerTx.wait(1);
+  // await transferOwnerTx.wait(1);
   log(`MockContract at ${mockContract.address}`);
 };
 
